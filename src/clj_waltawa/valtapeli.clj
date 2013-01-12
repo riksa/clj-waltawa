@@ -61,17 +61,58 @@
 
 (defn read-move [] (map dec (map read-string (clojure.string/split (read-line) #"\s+"))))
 
-(defn do-move-def [board]
+(defn score-moves-def [board]
   (let [moves (legit-moves board)]
-    (key (apply max-key val (zipmap moves (map valf moves))))))
+    (zipmap moves (map valf moves))))
+
+(defn score-moves-off [board]
+  (let [moves (legit-moves board)]
+    (zipmap moves (map valf moves))))
+
+;(ns clj-waltawa.strategy.simple)
+(defn score-moves [board]
+  (let [moves (legit-moves board)]
+    (zipmap moves (map valf moves))))
+
+(defn do-move-def [board]
+  (key (apply max-key val (score-moves board))))
 
 (defn do-move-off [board]
-  (let [moves (legit-moves board)]
-    (key (apply max-key val (zipmap moves (map valf moves))))))
+  (key (apply max-key val (score-moves board))))
 
 (defn do-move [side board]
   (let [move (if (= 1 side) (do-move-off board) (do-move-def board))]
     (println (inc (first move)) (inc (second move)))
     move))
+
+;Flood-fill (node, target-color, replacement-color):
+;1. Set Q to the empty queue.
+;2. Add node to the end of Q.
+;4. While Q is not empty:
+;5.     Set n equal to the last element of Q.
+;7.     Remove last element from Q.
+;8.     If the color of n is equal to target-color:
+;9.         Set the color of n to replacement-color.
+;10.        Add west node to end of Q.
+;11.        Add east node to end of Q.
+;12.        Add north node to end of Q.
+;13.        Add south node to end of Q.
+;14. Return.
+(defn flood-fill [board point]
+  (let [occupied (select-keys board (for [[k v] board :when (= v 1)] k))]
+    ;    (when (board point)
+    (loop [q (conj '() point) occupied occupied]
+      (println 'occupied occupied)
+      (println 'q q)
+      (if (empty? q)
+        occupied
+        (let [n (last q) q (butlast q)]
+          (println 'n n)
+          (if (= 1 (occupied n))
+            (recur (concat q (neighbours n)) (assoc occupied n 'x))
+            (recur q occupied)))))))
+
+
+
 
 
