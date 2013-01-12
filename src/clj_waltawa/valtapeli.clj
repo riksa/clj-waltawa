@@ -100,21 +100,17 @@
 ;14. Return.
 (defn flood-fill [board point]
   (let [occupied (select-keys board (for [[k v] board :when (= v 1)] k))]
-    ;    (when (board point)
     (loop [ret {} q (conj [] point) occupied occupied]
-;      (println 'occupied occupied)
-;      (println 'q q)
       (if (empty? q)
         (into {} (for [[k v] ret] [k (count ret)]))
         (let [n (last q) q (butlast q)]
-;          (println 'n n)
           (if (= 1 (occupied n))
             (recur (assoc ret n 'x) (concat q (neighbours n)) (assoc occupied n 'x))
             (recur ret q occupied)))))))
 
 (defn tile-values [board]
   (loop [board board scores {}]
-    (let [point (first (for [[k v] board :when (= v 1)] k))]
+    (let [point (first (for [[k v] board :when (= v 1)] k))]w
       (if (nil? point)
         scores
         (let [area (flood-fill board point)]
