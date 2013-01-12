@@ -106,13 +106,17 @@
       (for [move moves]
         (let [initial (valf move)
               max-neighbour (val (apply max-key val (into {0 -1} (select-keys values (neighbours move)))))
-              friendlies (count (filter even? (vals (select-keys board (clj-waltawa.valtapeli/neighbours move)))))]
-          [move (- (+ initial (* max-neighbour max-neighbour)) friendlies) ])))))
-;    (zipmap moves (map enclose-defend-function moves))))
+              friendlies (count (filter #(= 2 %) (vals (select-keys board (clj-waltawa.valtapeli/neighbours move)))))]
+          [move (- (+ initial (* max-neighbour max-neighbour)) friendlies)])))))
 
 (defn score-moves-off [board]
-  (let [moves (legit-moves board)]
-    (zipmap moves (map valf moves))))
+  (into {}
+    (let [moves (legit-moves board) values (tile-values board)]
+      (for [move moves]
+        (let [initial (valf move)
+              max-neighbour (val (apply max-key val (into {0 0} (select-keys values (neighbours move)))))
+              empties (count (for [m (clj-waltawa.valtapeli/neighbours move) :when (nil? (board m))] m))]
+          [move (+ initial (* empties (* max-neighbour max-neighbour)))])))))
 
 ;(ns clj-waltawa.strategy.simple)
 (defn score-moves [board]
@@ -123,7 +127,7 @@
   (key (apply max-key val (score-moves-def board))))
 
 (defn do-move-off [board]
-  (key (apply max-key val (score-moves board))))
+  (key (apply max-key val (score-moves-off board))))
 
 (defn do-move [side board]
   (let [move (if (= 1 side) (do-move-off board) (do-move-def board))]
