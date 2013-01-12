@@ -104,8 +104,10 @@
   (into {}
     (let [moves (legit-moves board) values (tile-values board)]
       (for [move moves]
-        (let [initial (valf move) max-neighbour (val (apply max-key val (into {0 -1} (select-keys values (neighbours move)))))]
-          [move (+ initial (* max-neighbour max-neighbour))])))))
+        (let [initial (valf move)
+              max-neighbour (val (apply max-key val (into {0 -1} (select-keys values (neighbours move)))))
+              friendlies (count (filter even? (vals (select-keys board (clj-waltawa.valtapeli/neighbours move)))))]
+          [move (- (+ initial (* max-neighbour max-neighbour)) friendlies) ])))))
 ;    (zipmap moves (map enclose-defend-function moves))))
 
 (defn score-moves-off [board]
