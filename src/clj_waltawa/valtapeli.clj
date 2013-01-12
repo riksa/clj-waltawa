@@ -1,4 +1,6 @@
 ;  (load-file "valtapeli.clj")
+;   (require 'clj-waltawa.valtapeli :reload-all)
+
 (ns clj-waltawa.valtapeli)
 
 (def size 16)
@@ -61,29 +63,11 @@
 
 (defn read-move [] (map dec (map read-string (clojure.string/split (read-line) #"\s+"))))
 
-(defn score-moves-def [board]
-  (let [moves (legit-moves board)]
-    (zipmap moves (map valf moves))))
-
-(defn score-moves-off [board]
-  (let [moves (legit-moves board)]
-    (zipmap moves (map valf moves))))
-
-;(ns clj-waltawa.strategy.simple)
-(defn score-moves [board]
-  (let [moves (legit-moves board)]
-    (zipmap moves (map valf moves))))
-
-(defn do-move-def [board]
-  (key (apply max-key val (score-moves board))))
-
-(defn do-move-off [board]
-  (key (apply max-key val (score-moves board))))
-
-(defn do-move [side board]
-  (let [move (if (= 1 side) (do-move-off board) (do-move-def board))]
-    (println (inc (first move)) (inc (second move)))
-    move))
+;(defn enclose-defend-function [x]
+; (let [initial ])
+;  (apply max-key val (select-keys values (clj-waltawa.valtapeli/neighbours [1 0])))
+;
+;  {x (valf x)})
 
 ;Flood-fill (node, target-color, replacement-color):
 ;1. Set Q to the empty queue.
@@ -110,11 +94,40 @@
 
 (defn tile-values [board]
   (loop [board board scores {}]
-    (let [point (first (for [[k v] board :when (= v 1)] k))]w
+    (let [point (first (for [[k v] board :when (= v 1)] k))] w
       (if (nil? point)
         scores
         (let [area (flood-fill board point)]
-          (recur (apply dissoc board (keys area)) (into scores area )))))))
+          (recur (apply dissoc board (keys area)) (conj scores area)))))))
+
+(defn score-moves-def [board]
+  (into {}
+    (let [moves (legit-moves board) values (tile-values board)]
+      (for [move moves]
+        (let [initial (valf move) max-neighbour (val (apply max-key val (into {0 -1} (select-keys values (neighbours move)))))]
+          [move (+ initial (* max-neighbour max-neighbour))])))))
+;    (zipmap moves (map enclose-defend-function moves))))
+
+(defn score-moves-off [board]
+  (let [moves (legit-moves board)]
+    (zipmap moves (map valf moves))))
+
+;(ns clj-waltawa.strategy.simple)
+(defn score-moves [board]
+  (let [moves (legit-moves board)]
+    (zipmap moves (map valf moves))))
+
+(defn do-move-def [board]
+  (key (apply max-key val (score-moves-def board))))
+
+(defn do-move-off [board]
+  (key (apply max-key val (score-moves board))))
+
+(defn do-move [side board]
+  (let [move (if (= 1 side) (do-move-off board) (do-move-def board))]
+    (println (inc (first move)) (inc (second move)))
+    move))
+
 
 
 
