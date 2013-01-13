@@ -4,15 +4,15 @@
 (ns clj-waltawa.valtapeli)
 
 (def size 16)
-(defn valid-coord
+(defn valid-coord? "tests that a coordinate is valid for the defined board size [0..15]"
   ([] false)
   ([x] (and (integer? x) (< x size) (>= x 0)))
   ([x & rest] false))
 
-(defn valid-point
+(defn valid-point? "tests that a point is a valid point in a map (x and y coordinates are valid)"
   ([] false)
-  ([p] (valid-point (first p) (second p)))
-  ([x y] (and (valid-coord x) (valid-coord y))))
+  ([p] (valid-point? (first p) (second p)))
+  ([x y] (and (valid-coord? x) (valid-coord? y))))
 
 (use '[clojure.string :only (join split)])
 (defn log [& more] (apply println more))
@@ -22,9 +22,9 @@
 ;(ns point)
 
 (defn magic [x off]
-  (when (valid-point x)
+  (when (valid-point? x)
     (let [p (map + off x)]
-      (when (valid-point p) p))))
+      (when (valid-point? p) p))))
 
 (defn ne [x]
   (magic x [1 -1]))
@@ -51,11 +51,11 @@
   (magic x [0 1]))
 
 (defn neighbours [x]
-  (when (valid-point x)
+  (when (valid-point? x)
     (remove nil? [(n x) (e x) (w x) (s x)])))
 
 (defn surroundings [x]
-  (when (valid-point x)
+  (when (valid-point? x)
     (remove nil? [(ne x) (nw x) (se x) (sw x) (n x) (e x) (w x) (s x)])))
 
 ;(ns player)
