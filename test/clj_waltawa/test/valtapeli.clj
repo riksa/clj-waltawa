@@ -64,3 +64,13 @@
 (deftest test-sw
   (let [p '(1 1)]
     (is (= (sw p) (s (w p))))))
+
+(deftest test-neighbours
+  (is (nil? (neighbours '(-1 1)))) ; no neighbours for invalid point
+  (is (= (set (neighbours '(0 0))) (set '((0 1) (1 0))))) ; corner point has 2 neighbours
+  (is (= (set (neighbours '(1 1))) (set '((0 1) (1 0) (1 2) (2 1)))))) ; more central point has 4 neighbours
+
+(deftest test-surroundings
+  (is (nil? (surroundings '(-1 1)))) ; no surroundings for invalid point
+  (is (= (set (surroundings '(0 0))) (set '((0 1) (1 0) (1 1))))) ; corner point has 3
+  (is (= (set (surroundings '(1 1))) (set '((0 0) (0 1) (0 2) (1 0) (1 2) (2 0) (2 1) (2 2)))))) ; more central point has 8 surroundings
