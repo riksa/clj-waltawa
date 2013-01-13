@@ -11,6 +11,15 @@ or build a jar and run it with
 lein uberjar
 java -jar clj-waltawa-1.0.0-SNAPSHOT-standalone.jar
 
+## Defensive "algo"
+tries to surround the regions occupied by the invader with a zig-zag pattern.
+prioritizes biggest regions,
+prioritizes moves that are at the center of the map
+
+## Offensive "algo"
+tries to expand regions already occupied
+prioritizes biggest regions,
+prioritizes moves that are at the center of the map
 
 ## License
 
