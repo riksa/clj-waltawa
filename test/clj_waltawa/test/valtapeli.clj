@@ -28,3 +28,39 @@
   (not (nil? (some #{'(10 1)} (legit-moves {})))) ; .. one of them should be '(10 1)
   (is (= 255 (count (legit-moves {'(10 1) 1})))) ; board with move made to '(10 1) must have 255 legit moves ..
   (is (nil? (some #{'(10 1)} (legit-moves {'(10 1) 1}))))) ; .. '(10 1) is not one of them
+
+(deftest test-n
+  (is (nil? (n '(110 0)))) ; illegal point -> nil
+  (is (nil? (n '(0 0)))) ; out of bounds -> nil
+  (is (= '(0 0) (n '(0 1)))))
+
+(deftest test-e
+  (is (nil? (e '(110 0)))) ; illegal point -> nil
+  (is (nil? (e '(15 15)))) ; out of bounds -> nil
+  (is (= '(1 0) (e '(0 0))))) ; east of '(0 0) = '(1 0)
+
+(deftest test-w
+  (is (nil? (w '(110 0)))) ; illegal point -> nil
+  (is (nil? (w '(0 0)))) ; out of bounds -> nil
+  (is (= '(0 0) (w '(1 0))))) ; west of '(1 0) = '(0 0)
+
+(deftest test-s
+  (is (nil? (s '(110 0)))) ; illegal point -> nil
+  (is (nil? (s '(15 15)))) ; out of bounds -> nil
+  (is (= '(0 1) (s '(0 0)))))
+
+(deftest test-nw
+  (let [p '(1 1)]
+    (is (= (nw p) (n (w p)))))) ; nw of '(1 1) is north of west of ('1 1)
+
+(deftest test-ne
+  (let [p '(1 1)]
+    (is (= (ne p) (n (e p))))))
+
+(deftest test-se
+  (let [p '(1 1)]
+    (is (= (se p) (s (e p))))))
+
+(deftest test-sw
+  (let [p '(1 1)]
+    (is (= (sw p) (s (w p))))))
