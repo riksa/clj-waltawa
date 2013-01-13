@@ -1,13 +1,19 @@
 # clj-waltawa
 
-FIXME: write description
+AI entry for http://www.ohjelmointiputka.net/kilpa.php?tunnus=valtapeli
 
 ## Usage
 
-FIXME: write
+install leiningen and run with
+lein trampoline run
+
+or build a jar and run it with
+lein uberjar
+java -jar clj-waltawa-1.0.0-SNAPSHOT-standalone.jar
+
 
 ## License
 
-Copyright (C) 2013 FIXME
+Copyright (C) 2013 riku salkia <riksa@iki.fi>
 
 Distributed under the Eclipse Public License, the same as Clojure.
