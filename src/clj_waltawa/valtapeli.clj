@@ -4,8 +4,10 @@
 (ns clj-waltawa.valtapeli)
 
 (def size 16)
-(defn valid-coord [x]
-  (and (integer? x) (< x size) (>= x 0)))
+(defn valid-coord
+  ([] false)
+  ([x] (and (integer? x) (< x size) (>= x 0)))
+  ([x & rest] false))
 
 (defn valid-point
   ([] false)
